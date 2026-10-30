@@ -1,0 +1,219 @@
+<!-- Указываем браузеру, что используем современный HTML. -->
+<!DOCTYPE html>
+<!-- Корень документа; lang="ru" задаёт русский язык. -->
+<html lang="ru">
+<!-- Настройки вкладки, кодировки и подключаемых файлов. -->
+<head>
+    <!-- UTF-8 позволяет корректно отображать кириллицу. -->
+    <meta charset="UTF-8">
+    <!-- Ширина страницы соответствует экрану устройства; это нужно для адаптивности. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Название вкладки браузера. -->
+    <title>Вход — Точка сборки</title>
+
+    <!-- Готовые классы Bootstrap: сетка, кнопки, поля и отступы. -->
+    <link rel="stylesheet" href="static/css/bootstrap.min.css">
+    <!-- Единый файл наших стилей; подключён после Bootstrap, чтобы уточнять его оформление. -->
+    <link rel="stylesheet" href="static/css/style.css">
+    <!-- Маленькая иконка во вкладке браузера. -->
+    <link rel="icon" href="static/img/favicon.svg" type="image/svg+xml">
+<!-- Конец настроек страницы. -->
+</head>
+<!-- Видимая часть страницы; home-page подключает общий согласованный вид шапки, карточек и боковой панели. -->
+<body class="home-page forms-page">
+    <!-- Верхняя панель; bg-white задаёт белый фон, border-bottom — нижнюю границу. -->
+    <header class="site-header border-bottom bg-white">
+        <!-- container ограничивает ширину, header-inner выравнивает элементы через Flexbox. -->
+        <div class="container header-inner">
+            <!-- Название сайта и ссылка на главную; fs-3 задаёт размер, fw-bold — жирный шрифт. -->
+            <a class="navbar-brand fw-bold fs-3 text-primary" href="index.html">
+            <img class="site-logo" src="static/img/favicon.svg" alt="">
+                Точка сборки
+            </a>
+
+            <!-- Форма отправляет GET-запрос на index.html; текст попадёт в адрес как ?q=...; фильтрации пока нет. -->
+            <form class="search-form" action="index.html" method="get">
+                <!-- Подпись связана с полем через for и id; visually-hidden скрывает её только визуально. -->
+                <label class="visually-hidden" for="search">Поиск по вопросам</label>
+                <!-- Поле поиска: name="q" — имя параметра, placeholder — подсказка, maxlength — предел символов. -->
+                <input class="form-control" id="search" name="q" type="search" placeholder="Поиск вопроса…" maxlength="100">
+                <!-- Кнопка отправки формы поиска; работает и по нажатию Enter в поле. -->
+                <button class="btn btn-outline-primary" type="submit">Найти</button>
+            <!-- Конец формы поиска; кнопка создания вопроса находится вне неё. -->
+            </form>
+
+            <!-- Отдельная ссылка на создание вопроса; не отправляет поисковую форму. -->
+            <a class="btn btn-primary ask-button" href="ask.html">Задать вопрос</a>
+
+            <!-- Навигационный блок; aria-label описывает его назначение. -->
+            <nav class="account-links" aria-label="Аккаунт">
+                <!-- Ссылка: href задаёт адрес перехода, текст между тегами виден пользователю. -->
+                <a href="login.html">Войти</a>
+                <!-- Ссылка: href задаёт адрес перехода, текст между тегами виден пользователю. -->
+                <a href="signup.html">Регистрация</a>
+            <!-- Конец блока навигации. -->
+            </nav>
+        <!-- Конец контейнера, открытого выше. -->
+        </div>
+    <!-- Конец шапки. -->
+    </header>
+
+    <!-- Основное содержимое; container ограничивает ширину, page-content задаёт отступы. -->
+    <main class="container page-content">
+        <!-- Строка сетки Bootstrap; g-4 задаёт промежутки между колонками. -->
+        <div class="row g-4">
+            <!-- Список занимает 12 колонок на узком экране и 9 из 12 начиная с 992px. -->
+            <section class="col-12 col-lg-9" aria-labelledby="page-title">
+                <!-- Заголовок и краткое назначение страницы. -->
+                <h1 class="h3 fw-bold" id="page-title">Вход</h1>
+                <p class="text-muted mb-4">Войдите, чтобы задавать вопросы и участвовать в обсуждениях.</p>
+
+                <!-- Единый контейнер формы: ширина, фон и отступы заданы в общем CSS. -->
+                <div class="site-form-panel">
+                    <!-- Образцы ошибок свернуты по умолчанию и не мешают заполнению.
+                         Атрибут open у details раскроет их сразу. -->
+                    <details class="form-errors-preview">
+                        <summary>Пример сообщения об ошибке</summary>
+                        <div class="alert alert-danger mt-3 mb-0" role="note">Неверная электронная почта или пароль. Проверьте данные и попробуйте ещё раз.</div>
+                    </details>
+
+                    <!-- Это статическая форма: кнопка ничего не отправляет.
+                         Не используем GET, чтобы пароли не попадали в адрес страницы. -->
+                    <form class="site-form" aria-label="Вход">
+
+                        <!-- Поле «Электронная почта»: mb-4 добавляет отступ под группой. -->
+                        <div class="mb-4">
+                            <!-- for совпадает с id поля и связывает его с подписью. -->
+                            <label class="form-label fw-semibold" for="email">Электронная почта</label>
+                            <!-- required — обязательность; minlength/maxlength — границы длины; name — имя данных. -->
+                            <input class="form-control" id="email" name="email" minlength="1" maxlength="254" required aria-describedby="email-help email-error" type="email" autocomplete="email" value="" placeholder="name@example.com">
+                            <!-- Подсказка связана с полем через aria-describedby. -->
+                            <div class="form-text" id="email-help">Например, name@example.com. Используется для входа.</div>
+                            <!-- Bootstrap показывает эту ошибку при классе is-invalid на поле.
+                                 Уберите is-invalid и aria-invalid, чтобы вернуть обычное состояние. -->
+                            <div class="invalid-feedback" id="email-error">Введите полный адрес, например name@example.com.</div>
+                        </div>
+
+                        <!-- Поле «Пароль»: mb-4 добавляет отступ под группой. -->
+                        <div class="mb-4">
+                            <!-- for совпадает с id поля и связывает его с подписью. -->
+                            <label class="form-label fw-semibold" for="password">Пароль</label>
+                            <!-- required — обязательность; minlength/maxlength — границы длины; name — имя данных. -->
+                            <input class="form-control" id="password" name="password" minlength="8" maxlength="128" required aria-describedby="password-help password-error" type="password" autocomplete="current-password" value="" placeholder="">
+                            <!-- Подсказка связана с полем через aria-describedby. -->
+                            <div class="form-text" id="password-help">Введите пароль от своего аккаунта.</div>
+                            <!-- Bootstrap показывает эту ошибку при классе is-invalid на поле.
+                                 Уберите is-invalid и aria-invalid, чтобы вернуть обычное состояние. -->
+                            <div class="invalid-feedback" id="password-error">Введите пароль от 8 до 128 символов.</div>
+                        </div>
+
+                        <!-- Пока button, а не submit: отправка появится с серверной обработкой. -->
+                        <button class="btn btn-primary form-action" type="button">Войти</button>
+
+                        <!-- Переход между формами входа и регистрации. -->
+                        <p class="form-crosslink">Нет аккаунта? <a href="signup.html">Зарегистрироваться</a></p>
+                    </form>
+                </div>
+            <!-- Конец смыслового раздела. -->
+            </section>
+
+            <!-- Боковая панель: вся ширина на телефоне, 3 из 12 колонок на большом экране. -->
+            <aside class="col-12 col-lg-3 sidebar">
+                <!-- Отдельный раздел боковой панели; mb-4 добавляет отступ под ним. -->
+                <section class="sidebar-card mb-4">
+                    <!-- Заголовок второго уровня; class выбирает его оформление в CSS. -->
+                    <h2 class="sidebar-heading">Популярные теги</h2>
+                    <!-- Контейнер тегов; flex-wrap разрешает перенос на новую строку. -->
+                    <div class="popular-tags">
+                        <!-- Тег: текст между тегами — название, параметр tag в href — его идентификатор. -->
+                        <a class="tag-custom tag-sage" href="tag.html#automation">автоматика</a>
+                        <!-- Тег: текст между тегами — название, параметр tag в href — его идентификатор. -->
+                        <a class="tag-custom tag-sand" href="tag.html#tolerances">допуски</a>
+                        <!-- Тег: текст между тегами — название, параметр tag в href — его идентификатор. -->
+                        <a class="tag-custom tag-teal" href="tag.html#arduino">arduino</a>
+                        <!-- Тег: текст между тегами — название, параметр tag в href — его идентификатор. -->
+                        <a class="tag-custom tag-lavender" href="tag.html#cad">САПР</a>
+                        <!-- Тег: текст между тегами — название, параметр tag в href — его идентификатор. -->
+                        <a class="tag-custom tag-sand" href="tag.html#mechanics">механика</a>
+                        <!-- Тег: текст между тегами — название, параметр tag в href — его идентификатор. -->
+                        <a class="tag-custom tag-blue" href="tag.html#electronics">электроника</a>
+                    <!-- Конец контейнера, открытого выше. -->
+                    </div>
+                <!-- Конец смыслового раздела. -->
+                </section>
+
+                <!-- Отдельный раздел боковой панели; mb-4 добавляет отступ под ним. -->
+                <section class="sidebar-card">
+                    <!-- Заголовок второго уровня; class выбирает его оформление в CSS. -->
+                    <h2 class="sidebar-heading">Лучшие участники</h2>
+                    <!-- Список участников; list-unstyled убирает маркеры, mb-0 — нижний отступ. -->
+                    <ul class="list-unstyled members-list mb-0">
+                        <!-- Один элемент списка участников; имя можно заменить здесь. -->
+                        <li class="member-row">
+                            <!-- Место участника в рейтинге; число можно изменить здесь. -->
+                            <span class="member-rank" aria-label="Место 1">1</span>
+                            <!-- Аватар: src задаёт файл, размер и скругление находятся в .member-avatar. -->
+                            <img class="member-avatar" src="static/img/ivan.svg" alt="Аватар: Иван">
+                            <!-- Имя занимает свободное место между аватаром и счётчиком. -->
+                            <span class="member-name">Иван <span class="member-fire" role="img" aria-label="Лидер рейтинга">🔥</span></span>
+                            <!-- Число ответов — пример; его можно изменить вручную. -->
+                            <span class="member-answers">
+                                <strong>128</strong>
+                                <span>ответов</span>
+                            </span>
+                        </li>
+                        <!-- Один элемент списка участников; имя можно заменить здесь. -->
+                        <li class="member-row">
+                            <!-- Место участника в рейтинге; число можно изменить здесь. -->
+                            <span class="member-rank" aria-label="Место 2">2</span>
+                            <!-- Аватар: src задаёт файл, размер и скругление находятся в .member-avatar. -->
+                            <img class="member-avatar" src="static/img/maria.svg" alt="Аватар: Мария">
+                            <!-- Имя занимает свободное место между аватаром и счётчиком. -->
+                            <span class="member-name">Мария</span>
+                            <!-- Число ответов — пример; его можно изменить вручную. -->
+                            <span class="member-answers">
+                                <strong>96</strong>
+                                <span>ответов</span>
+                            </span>
+                        </li>
+                        <!-- Один элемент списка участников; имя можно заменить здесь. -->
+                        <li class="member-row">
+                            <!-- Место участника в рейтинге; число можно изменить здесь. -->
+                            <span class="member-rank" aria-label="Место 3">3</span>
+                            <!-- Аватар: src задаёт файл, размер и скругление находятся в .member-avatar. -->
+                            <img class="member-avatar" src="static/img/avatar.svg" alt="Аватар: Артём">
+                            <!-- Имя занимает свободное место между аватаром и счётчиком. -->
+                            <span class="member-name">Артём</span>
+                            <!-- Число ответов — пример; его можно изменить вручную. -->
+                            <span class="member-answers">
+                                <strong>64</strong>
+                                <span>ответов</span>
+                            </span>
+                        </li>
+                    <!-- Конец списка. -->
+                    </ul>
+                <!-- Конец смыслового раздела. -->
+                </section>
+            <!-- Конец боковой панели. -->
+            </aside>
+        <!-- Конец контейнера, открытого выше. -->
+        </div>
+    <!-- Конец основного содержимого. -->
+    </main>
+
+    <!-- Нижняя панель страницы с белым фоном и верхней границей. -->
+    <footer class="site-footer bg-white border-top">
+        <!-- Контейнер ширины сайта с выравниванием текста по центру. -->
+        <div class="container text-center">
+            <!-- Приглушённый мелкий текст; содержимое можно редактировать вручную. -->
+            <span class="text-muted fs-6">© 2026 Точка сборки. Инженерные вопросы и ответы.</span>
+        <!-- Конец контейнера, открытого выше. -->
+        </div>
+    <!-- Конец подвала. -->
+    </footer>
+
+<!-- Конец видимой части страницы. -->
+</body>
+<!-- Конец HTML-документа. -->
+</html>
+

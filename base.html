@@ -1,0 +1,186 @@
+<!-- Указываем браузеру, что используем современный HTML. -->
+<!DOCTYPE html>
+<!-- Корень документа; lang="ru" задаёт русский язык. -->
+<html lang="ru">
+<!-- Настройки вкладки, кодировки и подключаемых файлов. -->
+<head>
+    <!-- UTF-8 позволяет корректно отображать кириллицу. -->
+    <meta charset="UTF-8">
+    <!-- Ширина страницы соответствует экрану устройства; это нужно для адаптивности. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Название вкладки браузера. -->
+    <title>Базовый макет — Точка сборки</title>
+
+    <!-- Готовые классы Bootstrap: сетка, кнопки, поля и отступы. -->
+    <link rel="stylesheet" href="static/css/bootstrap.min.css">
+    <!-- Единый файл наших стилей; подключён после Bootstrap, чтобы уточнять его оформление. -->
+    <link rel="stylesheet" href="static/css/style.css">
+    <!-- Маленькая иконка во вкладке браузера. -->
+    <link rel="icon" href="static/img/favicon.svg" type="image/svg+xml">
+<!-- Конец настроек страницы. -->
+</head>
+<!-- Видимая часть страницы; home-page подключает общий согласованный вид шапки, карточек и боковой панели. -->
+<body class="home-page">
+    <!-- Верхняя панель; bg-white задаёт белый фон, border-bottom — нижнюю границу. -->
+    <header class="site-header border-bottom bg-white">
+        <!-- container ограничивает ширину, header-inner выравнивает элементы через Flexbox. -->
+        <div class="container header-inner">
+            <!-- Название сайта и ссылка на главную; fs-3 задаёт размер, fw-bold — жирный шрифт. -->
+            <a class="navbar-brand fw-bold fs-3 text-primary" href="index.html">
+            <img class="site-logo" src="static/img/favicon.svg" alt="">
+                Точка сборки
+            </a>
+
+            <!-- Форма отправляет GET-запрос на index.html; текст попадёт в адрес как ?q=...; фильтрации пока нет. -->
+            <form class="search-form" action="index.html" method="get">
+                <!-- Подпись связана с полем через for и id; visually-hidden скрывает её только визуально. -->
+                <label class="visually-hidden" for="search">Поиск по вопросам</label>
+                <!-- Поле поиска: name="q" — имя параметра, placeholder — подсказка, maxlength — предел символов. -->
+                <input class="form-control" id="search" name="q" type="search" placeholder="Поиск вопроса…" maxlength="100">
+                <!-- Кнопка отправки формы поиска; работает и по нажатию Enter в поле. -->
+                <button class="btn btn-outline-primary" type="submit">Найти</button>
+            <!-- Конец формы поиска; кнопка создания вопроса находится вне неё. -->
+            </form>
+
+            <!-- Отдельная ссылка на создание вопроса; не отправляет поисковую форму. -->
+            <a class="btn btn-primary ask-button" href="ask.html">Задать вопрос</a>
+
+            <!-- Навигационный блок; aria-label описывает его назначение. -->
+            <nav class="account-links" aria-label="Аккаунт">
+                <!-- Ссылка: href задаёт адрес перехода, текст между тегами виден пользователю. -->
+                <a href="login.html">Войти</a>
+                <!-- Ссылка: href задаёт адрес перехода, текст между тегами виден пользователю. -->
+                <a href="signup.html">Регистрация</a>
+            <!-- Конец блока навигации. -->
+            </nav>
+        <!-- Конец контейнера, открытого выше. -->
+        </div>
+    <!-- Конец шапки. -->
+    </header>
+
+    <!-- Основное содержимое; container ограничивает ширину, page-content задаёт отступы. -->
+    <main class="container page-content">
+        <!-- Строка сетки Bootstrap; g-4 задаёт промежутки между колонками. -->
+        <div class="row g-4">
+            <!-- Список занимает 12 колонок на узком экране и 9 из 12 начиная с 992px. -->
+            <section class="col-12 col-lg-9" aria-labelledby="page-title">
+                <!-- Базовый каркас: здесь начинается содержимое конкретной страницы.
+                     Шапка, sidebar и подвал остаются общими по оформлению.
+                     В обычном HTML этот файл не подставляется в другие автоматически. -->
+                <h1 class="h3 fw-bold mb-4" id="page-title">Базовый макет</h1>
+
+                <!-- Демонстрационный блок показывает свободную центральную колонку. -->
+                <div class="layout-placeholder">
+                    <h2 class="h5">Основное содержимое страницы</h2>
+                    <p class="text-muted">
+                        Здесь размещаются список вопросов, отдельный вопрос или форма.
+                        Сейчас страница в разработке.
+                    </p>
+                    <!-- Локальная картинка; CSS уменьшает её на узком экране без обрезки. -->
+                    <img class="placeholder-image" src="static/img/cat-404.png" alt="Лежащий кот с облачком 404">
+
+                    <a href="index.html">Перейти к странице с новыми вопросами</a>
+                </div>
+            <!-- Конец смыслового раздела. -->
+            </section>
+
+            <!-- Боковая панель: вся ширина на телефоне, 3 из 12 колонок на большом экране. -->
+            <aside class="col-12 col-lg-3 sidebar">
+                <!-- Отдельный раздел боковой панели; mb-4 добавляет отступ под ним. -->
+                <section class="sidebar-card mb-4">
+                    <!-- Заголовок второго уровня; class выбирает его оформление в CSS. -->
+                    <h2 class="sidebar-heading">Популярные теги</h2>
+                    <!-- Контейнер тегов; flex-wrap разрешает перенос на новую строку. -->
+                    <div class="popular-tags">
+                        <!-- Тег: текст между тегами — название, параметр tag в href — его идентификатор. -->
+                        <a class="tag-custom tag-sage" href="tag.html#automation">автоматика</a>
+                        <!-- Тег: текст между тегами — название, параметр tag в href — его идентификатор. -->
+                        <a class="tag-custom tag-sand" href="tag.html#tolerances">допуски</a>
+                        <!-- Тег: текст между тегами — название, параметр tag в href — его идентификатор. -->
+                        <a class="tag-custom tag-teal" href="tag.html#arduino">arduino</a>
+                        <!-- Тег: текст между тегами — название, параметр tag в href — его идентификатор. -->
+                        <a class="tag-custom tag-lavender" href="tag.html#cad">САПР</a>
+                        <!-- Тег: текст между тегами — название, параметр tag в href — его идентификатор. -->
+                        <a class="tag-custom tag-sand" href="tag.html#mechanics">механика</a>
+                        <!-- Тег: текст между тегами — название, параметр tag в href — его идентификатор. -->
+                        <a class="tag-custom tag-blue" href="tag.html#electronics">электроника</a>
+                    <!-- Конец контейнера, открытого выше. -->
+                    </div>
+                <!-- Конец смыслового раздела. -->
+                </section>
+
+                <!-- Отдельный раздел боковой панели; mb-4 добавляет отступ под ним. -->
+                <section class="sidebar-card">
+                    <!-- Заголовок второго уровня; class выбирает его оформление в CSS. -->
+                    <h2 class="sidebar-heading">Лучшие участники</h2>
+                    <!-- Список участников; list-unstyled убирает маркеры, mb-0 — нижний отступ. -->
+                    <ul class="list-unstyled members-list mb-0">
+                        <!-- Один элемент списка участников; имя можно заменить здесь. -->
+                        <li class="member-row">
+                            <!-- Место участника в рейтинге; число можно изменить здесь. -->
+                            <span class="member-rank" aria-label="Место 1">1</span>
+                            <!-- Аватар: src задаёт файл, размер и скругление находятся в .member-avatar. -->
+                            <img class="member-avatar" src="static/img/ivan.svg" alt="Аватар: Иван">
+                            <!-- Имя занимает свободное место между аватаром и счётчиком. -->
+                            <span class="member-name">Иван <span class="member-fire" role="img" aria-label="Лидер рейтинга">🔥</span></span>
+                            <!-- Число ответов — пример; его можно изменить вручную. -->
+                            <span class="member-answers">
+                                <strong>128</strong>
+                                <span>ответов</span>
+                            </span>
+                        </li>
+                        <!-- Один элемент списка участников; имя можно заменить здесь. -->
+                        <li class="member-row">
+                            <!-- Место участника в рейтинге; число можно изменить здесь. -->
+                            <span class="member-rank" aria-label="Место 2">2</span>
+                            <!-- Аватар: src задаёт файл, размер и скругление находятся в .member-avatar. -->
+                            <img class="member-avatar" src="static/img/maria.svg" alt="Аватар: Мария">
+                            <!-- Имя занимает свободное место между аватаром и счётчиком. -->
+                            <span class="member-name">Мария</span>
+                            <!-- Число ответов — пример; его можно изменить вручную. -->
+                            <span class="member-answers">
+                                <strong>96</strong>
+                                <span>ответов</span>
+                            </span>
+                        </li>
+                        <!-- Один элемент списка участников; имя можно заменить здесь. -->
+                        <li class="member-row">
+                            <!-- Место участника в рейтинге; число можно изменить здесь. -->
+                            <span class="member-rank" aria-label="Место 3">3</span>
+                            <!-- Аватар: src задаёт файл, размер и скругление находятся в .member-avatar. -->
+                            <img class="member-avatar" src="static/img/avatar.svg" alt="Аватар: Артём">
+                            <!-- Имя занимает свободное место между аватаром и счётчиком. -->
+                            <span class="member-name">Артём</span>
+                            <!-- Число ответов — пример; его можно изменить вручную. -->
+                            <span class="member-answers">
+                                <strong>64</strong>
+                                <span>ответов</span>
+                            </span>
+                        </li>
+                    <!-- Конец списка. -->
+                    </ul>
+                <!-- Конец смыслового раздела. -->
+                </section>
+            <!-- Конец боковой панели. -->
+            </aside>
+        <!-- Конец контейнера, открытого выше. -->
+        </div>
+    <!-- Конец основного содержимого. -->
+    </main>
+
+    <!-- Нижняя панель страницы с белым фоном и верхней границей. -->
+    <footer class="site-footer bg-white border-top">
+        <!-- Контейнер ширины сайта с выравниванием текста по центру. -->
+        <div class="container text-center">
+            <!-- Приглушённый мелкий текст; содержимое можно редактировать вручную. -->
+            <span class="text-muted fs-6">© 2026 Точка сборки. Инженерные вопросы и ответы.</span>
+        <!-- Конец контейнера, открытого выше. -->
+        </div>
+    <!-- Конец подвала. -->
+    </footer>
+
+<!-- Конец видимой части страницы. -->
+</body>
+<!-- Конец HTML-документа. -->
+</html>
+

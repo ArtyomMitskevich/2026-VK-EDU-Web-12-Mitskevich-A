@@ -1,0 +1,5 @@
+{# obj — данные вопроса, переданные через include. #}
+<h2 class="question-title">
+    <a href="{% url 'question' question_id=obj.id %}">{{ obj.title }}</a>
+</h2>
+<p class="question-description">{{ obj.text|truncatechars:250 }}</p>

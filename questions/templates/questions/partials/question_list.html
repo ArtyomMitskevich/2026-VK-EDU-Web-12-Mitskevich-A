@@ -1,0 +1,8 @@
+{# questions содержит только объекты текущей страницы. #}
+{% for question in questions %}
+    {% include 'questions/partials/question_card.html' with question=question %}
+{% empty %}
+    <p class="text-muted">Вопросов по этой теме пока нет.</p>
+    <a class="btn btn-primary mb-4" href="{% url 'ask' %}">Задать вопрос</a>
+{% endfor %}
+{% include 'questions/partials/pagination.html' %}

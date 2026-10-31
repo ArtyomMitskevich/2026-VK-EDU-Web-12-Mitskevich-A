@@ -1,0 +1,31 @@
+{# page_obj — текущая страница Django Paginator. #}
+{% if page_obj.paginator.num_pages > 1 %}
+<nav aria-label="Страницы вопросов">
+    <!-- flex-wrap разрешает перенос номеров на узком экране. -->
+    <ul class="pagination flex-wrap mb-0">
+        <li class="page-item{% if not page_obj.has_previous %} disabled{% endif %}">
+            {% if page_obj.has_previous %}
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}{{ anchor|default:'' }}">Назад</a>
+            {% else %}
+                <span class="page-link" aria-disabled="true">Назад</span>
+            {% endif %}
+        </li>
+        {% for number in page_obj.paginator.page_range %}
+            <li class="page-item{% if number == page_obj.number %} active{% endif %}">
+                {% if number == page_obj.number %}
+                    <span class="page-link" aria-current="page">{{ number }}</span>
+                {% else %}
+                    <a class="page-link" href="?page={{ number }}{{ anchor|default:'' }}">{{ number }}</a>
+                {% endif %}
+            </li>
+        {% endfor %}
+        <li class="page-item{% if not page_obj.has_next %} disabled{% endif %}">
+            {% if page_obj.has_next %}
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}{{ anchor|default:'' }}">Вперёд</a>
+            {% else %}
+                <span class="page-link" aria-disabled="true">Вперёд</span>
+            {% endif %}
+        </li>
+    </ul>
+</nav>
+{% endif %}

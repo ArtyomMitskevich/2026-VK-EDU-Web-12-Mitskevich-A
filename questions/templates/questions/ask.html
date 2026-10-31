@@ -1,0 +1,69 @@
+{% extends 'questions/base.html' %}
+{% load static %}
+
+{% block title %}Новый вопрос — Точка сборки{% endblock %}
+{% block body_class %}forms-page{% endblock %}
+
+{% block content %}
+<!-- Заголовок и краткое назначение страницы. -->
+<h1 class="h3 fw-bold" id="page-title">Новый вопрос</h1>
+<p class="text-muted mb-4">Опишите инженерную задачу — участникам будет проще предложить решение.</p>
+
+<!-- Единый контейнер формы: ширина, фон и отступы заданы в общем CSS. -->
+<div class="site-form-panel">
+    <!-- Образцы ошибок свернуты по умолчанию и не мешают заполнению.
+         Атрибут open у details раскроет их сразу. -->
+    <details class="form-errors-preview">
+        <summary>Пример сообщения об ошибке</summary>
+        <div class="alert alert-danger mt-3 mb-0" role="note">Не удалось опубликовать вопрос. Проверьте заголовок, описание и теги.</div>
+    </details>
+
+    <!-- Это статическая форма: кнопка ничего не отправляет.
+         Не используем GET, чтобы пароли не попадали в адрес страницы. -->
+    <form class="site-form" aria-label="Новый вопрос">
+
+        <!-- Поле «Заголовок вопроса»: mb-4 добавляет отступ под группой. -->
+        <div class="mb-4">
+            <!-- for совпадает с id поля и связывает его с подписью. -->
+            <label class="form-label fw-semibold" for="question-title">Заголовок вопроса</label>
+            <!-- required — обязательность; minlength/maxlength — границы длины; name — имя данных. -->
+            <input class="form-control" id="question-title" name="question-title" minlength="10" maxlength="150" required aria-describedby="question-title-help question-title-error" type="text" autocomplete="off" value="" placeholder="Например: почему греется стабилизатор LM7805?">
+            <!-- Подсказка связана с полем через aria-describedby. -->
+            <div class="form-text" id="question-title-help">От 10 до 150 символов. Сформулируйте суть проблемы.</div>
+            <!-- Bootstrap показывает эту ошибку при классе is-invalid на поле.
+                 Уберите is-invalid и aria-invalid, чтобы вернуть обычное состояние. -->
+            <div class="invalid-feedback" id="question-title-error">Заголовок должен содержать от 10 до 150 символов.</div>
+        </div>
+
+        <!-- Поле «Подробности»: mb-4 добавляет отступ под группой. -->
+        <div class="mb-4">
+            <!-- for совпадает с id поля и связывает его с подписью. -->
+            <label class="form-label fw-semibold" for="question-text">Подробности</label>
+            <!-- required — обязательность; minlength/maxlength — границы длины; name — имя данных. -->
+            <textarea class="form-control" id="question-text" name="question-text" minlength="20" maxlength="5000" required aria-describedby="question-text-help question-text-error" rows="7" placeholder="Опишите устройство, исходные данные и вашу задачу…"></textarea>
+            <!-- Подсказка связана с полем через aria-describedby. -->
+            <div class="form-text" id="question-text-help">От 20 до 5000 символов. Укажите условия, что уже проверили и какой результат ожидали.</div>
+            <!-- Bootstrap показывает эту ошибку при классе is-invalid на поле.
+                 Уберите is-invalid и aria-invalid, чтобы вернуть обычное состояние. -->
+            <div class="invalid-feedback" id="question-text-error">Опишите проблему подробнее: от 20 до 5000 символов.</div>
+        </div>
+
+        <!-- Поле «Теги»: mb-4 добавляет отступ под группой. -->
+        <div class="mb-4">
+            <!-- for совпадает с id поля и связывает его с подписью. -->
+            <label class="form-label fw-semibold" for="question-tags">Теги</label>
+            <!-- required — обязательность; minlength/maxlength — границы длины; name — имя данных. -->
+            <input class="form-control" id="question-tags" name="question-tags" minlength="1" maxlength="64" required aria-describedby="question-tags-help question-tags-error" type="text" autocomplete="off" value="" placeholder="электроника, питание">
+            <!-- Подсказка связана с полем через aria-describedby. -->
+            <div class="form-text" id="question-tags-help">От 1 до 3 тегов через запятую, каждый до 20 символов. Например: электроника, питание.</div>
+            <!-- Bootstrap показывает эту ошибку при классе is-invalid на поле.
+                 Уберите is-invalid и aria-invalid, чтобы вернуть обычное состояние. -->
+            <div class="invalid-feedback" id="question-tags-error">Укажите до трёх тегов, каждый не длиннее 20 символов.</div>
+        </div>
+
+        <!-- Пока button, а не submit: отправка появится с серверной обработкой. -->
+        <button class="btn btn-primary form-action" type="button">Опубликовать вопрос</button>
+
+    </form>
+</div>
+{% endblock %}

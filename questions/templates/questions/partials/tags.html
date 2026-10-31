@@ -1,0 +1,7 @@
+{# tags — список словарей с названием, цветом и идентификатором тега. #}
+<div class="question-tags">
+    <span class="text-muted small">Теги:</span>
+    {% for tag in tags %}
+        <a class="tag-custom tag-{{ tag.color }}" href="{% url 'tag' tag_slug=tag.slug %}">{{ tag.name }}</a>
+    {% endfor %}
+</div>

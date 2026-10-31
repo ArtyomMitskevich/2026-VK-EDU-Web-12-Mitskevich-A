@@ -1,0 +1,45 @@
+{% load static %}
+{# Ответ текущей страницы. #}
+<article class="card card-custom answer-item{% if answer.correct %} answer-accepted{% endif %} mb-4">
+        <!-- Внутренний контейнер карточки; Flexbox располагает аватар и текст рядом. -->
+        <div class="card-body question-body">
+            <!-- Левая колонка: аватар сверху, голосование под ним. -->
+            <div class="question-author">
+                <!-- alt описывает картинку; имя файла можно заменить своим. -->
+                <img class="avatar-md" src="{% static answer.avatar %}" alt="Аватар: {{ answer.author }}">
+
+                <!-- Стрелки меняют цвет при наведении, число рейтинга пока статическое. -->
+                <div class="like-box" role="group" aria-label="Голосование за ответ 1">
+                    <!-- Положительная оценка: зелёный цвет задаётся через :hover в CSS. -->
+                    <button class="like-btn vote-up" type="button" aria-label="Нравится">▲</button>
+                    <span class="score">{{ answer.rating }}</span>
+                    <!-- Отрицательная оценка: красный цвет задаётся через :hover в CSS. -->
+                    <button class="like-btn vote-down" type="button" aria-label="Не нравится">▼</button>
+                <!-- Конец контейнера, открытого выше. -->
+                </div>
+            <!-- Конец контейнера, открытого выше. -->
+            </div>
+
+            <!-- Правая часть карточки; занимает оставшееся место. -->
+            <div class="question-content">
+                <!-- Заголовок обозначает автора ответа; дата имеет машинный формат datetime. -->
+                <h3 class="answer-name">{{ answer.author }}</h3>
+                <p class="question-date answer-date">
+                    <time datetime="2026-10-15T12:00">15 октября 2026, 12:00</time>
+                <!-- Конец абзаца. -->
+                </p>
+
+                <!-- Текст ответа разделён на абзацы для удобства чтения. -->
+                <div class="question-description">{{ answer.text|linebreaks }}</div>
+
+                <!-- Два состояния отметки: выбранная и нейтральная.
+                Переключение и права автора добавляются вместе с серверной логикой. -->
+                <button class="answer-mark{% if answer.correct %} is-correct{% endif %}" type="button" aria-pressed="{{ answer.correct|yesno:'true,false' }}">
+                    {% if answer.correct %}✓ Правильный ответ{% else %}Отметить как правильный{% endif %}
+                </button>
+            <!-- Конец контейнера, открытого выше. -->
+            </div>
+        <!-- Конец контейнера, открытого выше. -->
+        </div>
+    <!-- Конец карточки вопроса. -->
+    </article>

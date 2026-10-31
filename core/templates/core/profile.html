@@ -1,0 +1,77 @@
+{% extends 'questions/base.html' %}
+{% load static %}
+
+{% block title %}Настройки профиля — Точка сборки{% endblock %}
+{% block body_class %}forms-page{% endblock %}
+
+{% block content %}
+<!-- Заголовок и краткое назначение страницы. -->
+<h1 class="h3 fw-bold" id="page-title">Настройки профиля</h1>
+<p class="text-muted mb-4">Измените имя, электронную почту или аватар.</p>
+
+<!-- Единый контейнер формы: ширина, фон и отступы заданы в общем CSS. -->
+<div class="site-form-panel">
+    <!-- Образцы ошибок свернуты по умолчанию и не мешают заполнению.
+         Атрибут open у details раскроет их сразу. -->
+    <details class="form-errors-preview">
+        <summary>Пример сообщения об ошибке</summary>
+        <div class="alert alert-danger mt-3 mb-0" role="note">Не удалось сохранить изменения профиля. Проверьте данные и формат изображения.</div>
+    </details>
+
+    <!-- Это статическая форма: кнопка ничего не отправляет.
+         Не используем GET, чтобы пароли не попадали в адрес страницы. -->
+    <form class="site-form" aria-label="Настройки профиля">
+        <!-- Текущий аватар и имя; выбор нового файла пока не обновляет картинку. -->
+        <div class="profile-overview">
+            <img src="{% static 'img/avatar.svg' %}" alt="Текущий аватар Артёма">
+            <div>
+                <strong>Артём</strong>
+                <p class="text-muted mb-0">Участник «Точки сборки»</p>
+            </div>
+        </div>
+
+        <!-- Поле «Электронная почта»: mb-4 добавляет отступ под группой. -->
+        <div class="mb-4">
+            <!-- for совпадает с id поля и связывает его с подписью. -->
+            <label class="form-label fw-semibold" for="email">Электронная почта</label>
+            <!-- required — обязательность; minlength/maxlength — границы длины; name — имя данных. -->
+            <input class="form-control" id="email" name="email" minlength="1" maxlength="254" required aria-describedby="email-help email-error" type="email" autocomplete="email" value="artyom@example.com" placeholder="">
+            <!-- Подсказка связана с полем через aria-describedby. -->
+            <div class="form-text" id="email-help">Адрес для входа. До 254 символов.</div>
+            <!-- Bootstrap показывает эту ошибку при классе is-invalid на поле.
+                 Уберите is-invalid и aria-invalid, чтобы вернуть обычное состояние. -->
+            <div class="invalid-feedback" id="email-error">Введите корректную электронную почту.</div>
+        </div>
+
+        <!-- Поле «Имя пользователя»: mb-4 добавляет отступ под группой. -->
+        <div class="mb-4">
+            <!-- for совпадает с id поля и связывает его с подписью. -->
+            <label class="form-label fw-semibold" for="nickname">Имя пользователя</label>
+            <!-- required — обязательность; minlength/maxlength — границы длины; name — имя данных. -->
+            <input class="form-control" id="nickname" name="nickname" minlength="2" maxlength="30" required aria-describedby="nickname-help nickname-error" type="text" autocomplete="nickname" value="Артём" placeholder="">
+            <!-- Подсказка связана с полем через aria-describedby. -->
+            <div class="form-text" id="nickname-help">От 2 до 30 символов.</div>
+            <!-- Bootstrap показывает эту ошибку при классе is-invalid на поле.
+                 Уберите is-invalid и aria-invalid, чтобы вернуть обычное состояние. -->
+            <div class="invalid-feedback" id="nickname-error">Введите имя длиной от 2 до 30 символов.</div>
+        </div>
+
+        <!-- Поле «Аватар»: mb-4 добавляет отступ под группой. -->
+        <div class="mb-4">
+            <!-- for совпадает с id поля и связывает его с подписью. -->
+            <label class="form-label fw-semibold" for="avatar">Аватар</label>
+            <!-- accept предлагает PNG/JPEG; размер файла позже проверит сервер. -->
+            <input class="form-control" id="avatar" name="avatar" type="file" accept="image/png,image/jpeg" aria-describedby="avatar-help avatar-error">
+            <!-- Подсказка связана с полем через aria-describedby. -->
+            <div class="form-text" id="avatar-help">Необязательно. PNG или JPEG до 2 МБ. Выбор файла пока не меняет изображение.</div>
+            <!-- Bootstrap показывает эту ошибку при классе is-invalid на поле.
+                 Уберите is-invalid и aria-invalid, чтобы вернуть обычное состояние. -->
+            <div class="invalid-feedback" id="avatar-error">Выберите изображение PNG или JPEG размером до 2 МБ.</div>
+        </div>
+
+        <!-- Пока button, а не submit: отправка появится с серверной обработкой. -->
+        <button class="btn btn-primary form-action" type="button">Сохранить изменения</button>
+
+    </form>
+</div>
+{% endblock %}

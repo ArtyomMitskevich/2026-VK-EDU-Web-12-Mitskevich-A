@@ -1,0 +1,21 @@
+{% extends 'questions/base.html' %}
+{% load static %}
+
+{% block title %}Новые вопросы — Точка сборки{% endblock %}
+
+{# Список вопросов; каркас наследуется от base. #}
+{% block content %}
+<!-- Главный заголовок остаётся отдельным от навигации по спискам. -->
+<h1 class="h3 fw-bold mb-0" id="page-title">Новые вопросы</h1>
+
+<!-- Ссылки выглядят как вкладки; active и aria-current отмечают текущую. -->
+<nav class="listing-tabs" aria-label="Списки вопросов">
+    <!-- Текущий раздел выделен цветом и нижней полоской. -->
+    <a class="listing-tab active" href="{% url 'index' %}" aria-current="page">Новые вопросы</a>
+    <!-- Переход на страницу популярных вопросов. -->
+    <a class="listing-tab" href="{% url 'hot' %}">Популярные вопросы</a>
+<!-- Конец блока навигации. -->
+</nav>
+
+    {% include 'questions/partials/question_list.html' %}
+{% endblock %}

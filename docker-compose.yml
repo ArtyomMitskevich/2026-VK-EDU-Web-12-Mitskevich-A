@@ -1,0 +1,17 @@
+services:
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY:-local-development-key-not-for-production}
+      DJANGO_DEBUG: ${DJANGO_DEBUG:-1}
+      DJANGO_ALLOWED_HOSTS: ${DJANGO_ALLOWED_HOSTS:-localhost,127.0.0.1,[::1]}
+    volumes:
+      # Изменения в PyCharm сразу видны серверу внутри контейнера.
+      - .:/app
+      # Пользовательские файлы сохраняются отдельно от образа.
+      - media_data:/app/media
+
+volumes:
+  media_data:

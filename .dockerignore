@@ -1,0 +1,15 @@
+# Локальное окружение, настройки редактора и Git не нужны внутри образа.
+.venv/
+venv/
+.idea/
+.vscode/
+.git/
+**/__pycache__/
+**/*.pyc
+*.log
+*.sqlite3
+.env
+Public-backup-before-hw1/
+# Собранная статика; исходную public/static/ сохраняем.
+/static/
+/media/

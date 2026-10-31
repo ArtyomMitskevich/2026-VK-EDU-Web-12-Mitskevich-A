@@ -1,0 +1,104 @@
+{% extends 'questions/base.html' %}
+{% load static %}
+
+{% block title %}{{ question.title }} — Точка сборки{% endblock %}
+
+{% block body_class %}question-page{% endblock %}
+
+{# Вопрос и ответы. #}
+{% block content %}
+<!-- Ссылка возвращает к общему списку вопросов. -->
+<nav class="question-breadcrumb" aria-label="Путь к вопросу">
+    <a href="{% url 'index' %}">Все вопросы</a>
+    <span aria-hidden="true">/</span>
+    <a href="{% url 'tag' tag_slug=question.tags.0.slug %}">{{ question.tags.0.name }}</a>
+<!-- Конец блока навигации. -->
+</nav>
+
+<!-- Полный вопрос; единственный h1 расположен внутри карточки. -->
+<article class="card card-custom mb-4">
+        <!-- Внутренний контейнер карточки; Flexbox располагает аватар и текст рядом. -->
+        <div class="card-body question-body">
+            <!-- Левая колонка: аватар сверху, голосование под ним. -->
+            <div class="question-author">
+                <!-- alt описывает картинку; имя файла можно заменить своим. -->
+                <img class="avatar-md" src="{% static question.avatar %}" alt="Аватар: {{ question.author }}">
+
+                <!-- Блок оценки: стрелки меняют цвет при наведении, нажатие пока не обрабатывается. -->
+                <div class="like-box" role="group" aria-label="Голосование за вопрос 1">
+                    <!-- Положительная оценка: зелёный цвет задаётся через :hover в CSS. -->
+                    <button class="like-btn vote-up" type="button" aria-label="Нравится">▲</button>
+                    <!-- Текущий рейтинг вопроса; число редактируется вручную. -->
+                    <span class="score">{{ question.rating }}</span>
+                    <!-- Отрицательная оценка: красный цвет задаётся через :hover в CSS. -->
+                    <button class="like-btn vote-down" type="button" aria-label="Не нравится">▼</button>
+                <!-- Конец контейнера, открытого выше. -->
+                </div>
+            <!-- Конец контейнера, открытого выше. -->
+            </div>
+
+            <!-- Правая часть карточки; занимает оставшееся место. -->
+            <div class="question-content">
+                <!-- Заголовок второго уровня; class выбирает его оформление в CSS. -->
+                <h1 class="question-title" id="page-title">
+                    {{ question.title }}
+                <!-- Конец заголовка карточки. -->
+                </h1>
+
+                <div class="question-description">{{ question.text|linebreaks }}</div>
+
+                <!-- Группа количества ответов и тегов; переносится при нехватке места. -->
+                <div class="question-meta">
+                    <a class="answer-link" href="{% url 'question' question_id=question.id %}#answers">Ответы ({{ question.answer_count }})</a>
+
+                    <!-- Контейнер тегов; flex-wrap разрешает перенос на новую строку. -->
+                    {% include 'questions/partials/tags.html' with tags=question.tags %}
+                <!-- Конец контейнера, открытого выше. -->
+                </div>
+
+                <!-- Абзац с автором и датой публикации. -->
+                <p class="question-date">
+                    <!-- datetime — дата для программ; текст после скобки — дата для читателя. -->
+                    {{ question.author }} · <time datetime="2026-10-15T10:30">15 октября 2026, 10:30</time>
+                <!-- Конец абзаца. -->
+                </p>
+            <!-- Конец контейнера, открытого выше. -->
+            </div>
+        <!-- Конец контейнера, открытого выше. -->
+        </div>
+    <!-- Конец карточки вопроса. -->
+    </article>
+
+<!-- Якорь #answers в ссылках карточек ведёт к этому разделу. -->
+<section class="answers-section" id="answers" aria-labelledby="answers-title">
+    <h2 class="h4 fw-bold mb-4" id="answers-title">Ответы <span class="answer-total">{{ question.answer_count }}</span></h2>
+
+    {% for answer in answers %}
+        {% include 'questions/partials/answer.html' with answer=answer %}
+    {% empty %}
+        <p class="text-muted">Ответов пока нет. Предложите своё решение.</p>
+    {% endfor %}
+    {% include 'questions/partials/pagination.html' with anchor='#answers' %}
+<!-- Конец смыслового раздела. -->
+</section>
+
+<!-- Форма ответа: сейчас показываем поля и встроенную проверку браузера. -->
+<section class="answer-compose" aria-labelledby="compose-title">
+    <h2 class="h4 fw-bold" id="compose-title">Твой ответ</h2>
+    <p class="text-muted">Объясни решение и приведи расчёт или пример, если он поможет.</p>
+
+    <!-- Без серверной обработки ответ не сохраняется.
+    Кнопка type="button" пока не отправляет текст в адрес страницы. -->
+    <form>
+        <!-- for связывает подпись с id поля ввода. -->
+        <label class="form-label fw-semibold" for="answer-text">Текст ответа</label>
+        <!-- rows — высота; minlength и maxlength — допустимая длина текста. -->
+        <textarea class="form-control" id="answer-text" name="answer" rows="6" minlength="10" maxlength="2000" required aria-describedby="answer-help" placeholder="Поделись своим решением…"></textarea>
+        <!-- Подсказка связана с полем через aria-describedby. -->
+        <p class="form-text" id="answer-help">От 10 до 2000 символов. Пока это макет: ответ не отправляется и не сохраняется.</p>
+        <button class="btn btn-primary mt-2" type="button">Отправить ответ</button>
+    <!-- Конец формы поиска; кнопка создания вопроса находится вне неё. -->
+    </form>
+<!-- Конец смыслового раздела. -->
+</section>
+{% endblock %}

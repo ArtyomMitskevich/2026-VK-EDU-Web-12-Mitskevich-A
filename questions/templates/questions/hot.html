@@ -1,0 +1,17 @@
+{% extends 'questions/base.html' %}
+{% load static %}
+
+{% block title %}Популярные вопросы — Точка сборки{% endblock %}
+
+{# Список вопросов; каркас наследуется от base. #}
+{% block content %}
+<!-- Заголовок списка, отсортированного по рейтингу. -->
+<h1 class="h3 fw-bold mb-0" id="page-title">Популярные вопросы</h1>
+<!-- Обычные ссылки между списками; active отмечает открытый раздел. -->
+<nav class="listing-tabs" aria-label="Списки вопросов">
+    <a class="listing-tab" href="{% url 'index' %}">Новые вопросы</a>
+    <a class="listing-tab active" href="{% url 'hot' %}" aria-current="page">Популярные вопросы</a>
+<!-- Конец блока навигации. -->
+</nav>
+{% include 'questions/partials/question_list.html' %}
+{% endblock %}

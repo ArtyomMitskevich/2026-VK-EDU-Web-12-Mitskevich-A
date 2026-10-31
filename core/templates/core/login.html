@@ -1,0 +1,58 @@
+{% extends 'questions/base.html' %}
+{% load static %}
+
+{% block title %}Вход — Точка сборки{% endblock %}
+{% block body_class %}forms-page{% endblock %}
+
+{% block content %}
+<!-- Заголовок и краткое назначение страницы. -->
+<h1 class="h3 fw-bold" id="page-title">Вход</h1>
+<p class="text-muted mb-4">Войдите, чтобы задавать вопросы и участвовать в обсуждениях.</p>
+
+<!-- Единый контейнер формы: ширина, фон и отступы заданы в общем CSS. -->
+<div class="site-form-panel">
+    <!-- Образцы ошибок свернуты по умолчанию и не мешают заполнению.
+         Атрибут open у details раскроет их сразу. -->
+    <details class="form-errors-preview">
+        <summary>Пример сообщения об ошибке</summary>
+        <div class="alert alert-danger mt-3 mb-0" role="note">Неверная электронная почта или пароль. Проверьте данные и попробуйте ещё раз.</div>
+    </details>
+
+    <!-- Это статическая форма: кнопка ничего не отправляет.
+         Не используем GET, чтобы пароли не попадали в адрес страницы. -->
+    <form class="site-form" aria-label="Вход">
+
+        <!-- Поле «Электронная почта»: mb-4 добавляет отступ под группой. -->
+        <div class="mb-4">
+            <!-- for совпадает с id поля и связывает его с подписью. -->
+            <label class="form-label fw-semibold" for="email">Электронная почта</label>
+            <!-- required — обязательность; minlength/maxlength — границы длины; name — имя данных. -->
+            <input class="form-control" id="email" name="email" minlength="1" maxlength="254" required aria-describedby="email-help email-error" type="email" autocomplete="email" value="" placeholder="name@example.com">
+            <!-- Подсказка связана с полем через aria-describedby. -->
+            <div class="form-text" id="email-help">Например, name@example.com. Используется для входа.</div>
+            <!-- Bootstrap показывает эту ошибку при классе is-invalid на поле.
+                 Уберите is-invalid и aria-invalid, чтобы вернуть обычное состояние. -->
+            <div class="invalid-feedback" id="email-error">Введите полный адрес, например name@example.com.</div>
+        </div>
+
+        <!-- Поле «Пароль»: mb-4 добавляет отступ под группой. -->
+        <div class="mb-4">
+            <!-- for совпадает с id поля и связывает его с подписью. -->
+            <label class="form-label fw-semibold" for="password">Пароль</label>
+            <!-- required — обязательность; minlength/maxlength — границы длины; name — имя данных. -->
+            <input class="form-control" id="password" name="password" minlength="8" maxlength="128" required aria-describedby="password-help password-error" type="password" autocomplete="current-password" value="" placeholder="">
+            <!-- Подсказка связана с полем через aria-describedby. -->
+            <div class="form-text" id="password-help">Введите пароль от своего аккаунта.</div>
+            <!-- Bootstrap показывает эту ошибку при классе is-invalid на поле.
+                 Уберите is-invalid и aria-invalid, чтобы вернуть обычное состояние. -->
+            <div class="invalid-feedback" id="password-error">Введите пароль от 8 до 128 символов.</div>
+        </div>
+
+        <!-- Пока button, а не submit: отправка появится с серверной обработкой. -->
+        <button class="btn btn-primary form-action" type="button">Войти</button>
+
+        <!-- Переход между формами входа и регистрации. -->
+        <p class="form-crosslink">Нет аккаунта? <a href="{% url 'signup' %}">Зарегистрироваться</a></p>
+    </form>
+</div>
+{% endblock %}

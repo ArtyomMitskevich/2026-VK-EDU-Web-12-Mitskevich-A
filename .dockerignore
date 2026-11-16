@@ -9,6 +9,7 @@ venv/
 *.log
 *.sqlite3
 .env
+.env.*
 Public-backup-before-hw1/
 # Собранная статика; исходную public/static/ сохраняем.
 /static/

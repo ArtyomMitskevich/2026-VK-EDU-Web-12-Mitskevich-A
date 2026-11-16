@@ -1,4 +1,4 @@
-{% extends 'questions/base.html' %}
+{% extends 'base.html' %}
 {% load static %}
 
 {% block title %}Настройки профиля — Точка сборки{% endblock %}
@@ -23,7 +23,7 @@
     <form class="site-form" aria-label="Настройки профиля">
         <!-- Текущий аватар и имя; выбор нового файла пока не обновляет картинку. -->
         <div class="profile-overview">
-            <img src="{% static 'img/avatar.svg' %}" alt="Текущий аватар Артёма">
+            <img src="{% static 'questions/img/avatar.svg' %}" alt="Текущий аватар Артёма">
             <div>
                 <strong>Артём</strong>
                 <p class="text-muted mb-0">Участник «Точки сборки»</p>

@@ -1,4 +1,4 @@
-{% extends 'questions/base.html' %}
+{% extends 'base.html' %}
 {% load static %}
 
 {% block title %}{{ question.title }} — Точка сборки{% endblock %}
@@ -10,8 +10,12 @@
 <!-- Ссылка возвращает к общему списку вопросов. -->
 <nav class="question-breadcrumb" aria-label="Путь к вопросу">
     <a href="{% url 'index' %}">Все вопросы</a>
-    <span aria-hidden="true">/</span>
-    <a href="{% url 'tag' tag_slug=question.tags.0.slug %}">{{ question.tags.0.name }}</a>
+    {% with first_tag=question.tags.all.0 %}
+        {% if first_tag %}
+            <span aria-hidden="true">/</span>
+            <a href="{% url 'tag' tag_slug=first_tag.slug %}">{{ first_tag.name }}</a>
+        {% endif %}
+    {% endwith %}
 <!-- Конец блока навигации. -->
 </nav>
 
@@ -22,7 +26,7 @@
             <!-- Левая колонка: аватар сверху, голосование под ним. -->
             <div class="question-author">
                 <!-- alt описывает картинку; имя файла можно заменить своим. -->
-                <img class="avatar-md" src="{% static question.avatar %}" alt="Аватар: {{ question.author }}">
+                {% include 'partials/avatar.html' with person=question.author css_class='avatar-md' only %}
 
                 <!-- Блок оценки: стрелки меняют цвет при наведении, нажатие пока не обрабатывается. -->
                 <div class="like-box" role="group" aria-label="Голосование за вопрос 1">
@@ -49,17 +53,17 @@
 
                 <!-- Группа количества ответов и тегов; переносится при нехватке места. -->
                 <div class="question-meta">
-                    <a class="answer-link" href="{% url 'question' question_id=question.id %}#answers">Ответы ({{ question.answer_count }})</a>
+                    <a class="answer-link" href="{{ question.get_absolute_url }}#answers">Ответы ({{ question.answer_count }})</a>
 
                     <!-- Контейнер тегов; flex-wrap разрешает перенос на новую строку. -->
-                    {% include 'questions/partials/tags.html' with tags=question.tags %}
+                    {% include 'questions/partials/tags.html' with tags=question.tags.all %}
                 <!-- Конец контейнера, открытого выше. -->
                 </div>
 
                 <!-- Абзац с автором и датой публикации. -->
                 <p class="question-date">
                     <!-- datetime — дата для программ; текст после скобки — дата для читателя. -->
-                    {{ question.author }} · <time datetime="2026-10-15T10:30">15 октября 2026, 10:30</time>
+                    {{ question.author }} · <time datetime="{{ question.created_at|date:'c' }}">{{ question.created_at|date:"j E Y, H:i" }}</time>
                 <!-- Конец абзаца. -->
                 </p>
             <!-- Конец контейнера, открытого выше. -->

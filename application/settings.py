@@ -11,17 +11,30 @@ https://docs.djangoproject.com/en/6.1/ref/settings/
 """
 
 from pathlib import Path
+from ipaddress import IPv4Address
 import os
+import sys
+
+from django.core.exceptions import ImproperlyConfigured
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+load_dotenv(BASE_DIR / '.env.local')
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'local-development-key-not-for-production')
+def required_env(name):
+    value = os.environ.get(name)
+    if not value:
+        raise ImproperlyConfigured(f'Задайте {name} в .env.local или .env.docker.')
+    return value
+
+
+SECRET_KEY = required_env('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DJANGO_DEBUG', '1') == '1'
@@ -53,18 +66,37 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+# Панель нужна только при разработке. Тестовый клиент работает без неё.
+ENABLE_DEBUG_TOOLBAR = DEBUG and 'test' not in sys.argv
+if ENABLE_DEBUG_TOOLBAR:
+    INSTALLED_APPS.append('debug_toolbar')
+    MIDDLEWARE.insert(0, 'debug_toolbar.middleware.DebugToolbarMiddleware')
+    INTERNAL_IPS = ['127.0.0.1', '::1']
+    if os.environ.get('DJANGO_IN_DOCKER') == '1':
+        # Docker Desktop передаёт запросы хоста через шлюз сети Compose.
+        routes = Path('/proc/net/route')
+        if routes.is_file():
+            for line in routes.read_text().splitlines()[1:]:
+                _, destination, gateway, *_ = line.split()
+                if destination == '00000000' and gateway != '00000000':
+                    INTERNAL_IPS.append(str(IPv4Address(bytes.fromhex(gateway)[::-1])))
+        DEBUG_TOOLBAR_CONFIG = {
+            'SHOW_TOOLBAR_CALLBACK': 'debug_toolbar.middleware.show_toolbar_with_docker',
+        }
+
 ROOT_URLCONF = 'application.urls'
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'questions.context_processors.sidebar',
             ],
         },
     },
@@ -78,8 +110,12 @@ WSGI_APPLICATION = 'application.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': required_env('POSTGRES_DB'),
+        'USER': required_env('POSTGRES_USER'),
+        'PASSWORD': required_env('POSTGRES_PASSWORD'),
+        'HOST': required_env('DB_HOST'),
+        'PORT': required_env('DB_PORT'),
     }
 }
 
@@ -120,9 +156,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-# Исходные CSS и изображения находятся в questions/static/.
-# Тег static в шаблоне строит адреса относительно STATIC_URL.
-# Исходники найдёт AppDirectoriesFinder в questions/static/.
+# Пространство имён исходной статики: questions/static/questions/.
 
 # Отдельная папка для собранной статики; не совпадает с исходниками.
 STATIC_ROOT = BASE_DIR / 'static'

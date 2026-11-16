@@ -7,6 +7,9 @@ def paginate(objects_list, request, per_page=10):
     paginator = Paginator(objects_list, per_page)
     number = request.GET.get("page", 1)
     try:
-        return paginator.page(number)
+        page = paginator.page(number)
     except (PageNotAnInteger, EmptyPage):
-        return paginator.page(1)
+        page = paginator.page(1)
+    # На большой базе показываем края списка и соседей текущей страницы.
+    page.visible_numbers = list(paginator.get_elided_page_range(page.number))
+    return page

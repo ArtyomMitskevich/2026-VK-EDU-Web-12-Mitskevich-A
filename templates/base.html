@@ -12,11 +12,11 @@
     <title>{% block title %}Точка сборки{% endblock %}</title>
 
     <!-- Готовые классы Bootstrap: сетка, кнопки, поля и отступы. -->
-    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'questions/css/bootstrap.min.css' %}">
     <!-- Единый файл наших стилей; подключён после Bootstrap, чтобы уточнять его оформление. -->
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'questions/css/style.css' %}">
     <!-- Маленькая иконка во вкладке браузера. -->
-    <link rel="icon" href="{% static 'img/favicon.svg' %}" type="image/svg+xml">
+    <link rel="icon" href="{% static 'questions/img/favicon.svg' %}" type="image/svg+xml">
 <!-- Конец настроек страницы. -->
 </head>
 <body class="home-page {% block body_class %}{% endblock %}">
@@ -27,7 +27,7 @@
         <div class="container header-inner">
             <!-- Название сайта и ссылка на главную; fs-3 задаёт размер, fw-bold — жирный шрифт. -->
             <a class="navbar-brand fw-bold fs-3 text-primary" href="{% url 'index' %}">
-            <img class="site-logo" src="{% static 'img/favicon.svg' %}" alt="">
+            <img class="site-logo" src="{% static 'questions/img/favicon.svg' %}" alt="">
                 Точка сборки
             </a>
 
@@ -48,7 +48,7 @@
             {# Вид шапки зависит от авторизации. #}
             {% if user.is_authenticated %}
                 <div class="user-block">
-                    <img src="{% static 'img/avatar.svg' %}" alt="Аватар пользователя">
+                    {% include 'partials/avatar.html' with person=user css_class='member-avatar' only %}
                     <div>
                         <span class="fw-semibold">{% firstof user.first_name user.username %}</span>
                         <a href="{% url 'profile' %}">Настройки профиля</a>
@@ -91,18 +91,11 @@
                     <h2 class="sidebar-heading">Популярные теги</h2>
                     <!-- Контейнер тегов; flex-wrap разрешает перенос на новую строку. -->
                     <div class="popular-tags">
-                        <!-- Тег: текст между тегами — название, параметр tag в href — его идентификатор. -->
-                        <a class="tag-custom tag-sage" href="{% url 'tag' tag_slug='automation' %}">автоматика</a>
-                        <!-- Тег: текст между тегами — название, параметр tag в href — его идентификатор. -->
-                        <a class="tag-custom tag-sand" href="{% url 'tag' tag_slug='tolerances' %}">допуски</a>
-                        <!-- Тег: текст между тегами — название, параметр tag в href — его идентификатор. -->
-                        <a class="tag-custom tag-teal" href="{% url 'tag' tag_slug='arduino' %}">arduino</a>
-                        <!-- Тег: текст между тегами — название, параметр tag в href — его идентификатор. -->
-                        <a class="tag-custom tag-lavender" href="{% url 'tag' tag_slug='cad' %}">САПР</a>
-                        <!-- Тег: текст между тегами — название, параметр tag в href — его идентификатор. -->
-                        <a class="tag-custom tag-sand" href="{% url 'tag' tag_slug='mechanics' %}">механика</a>
-                        <!-- Тег: текст между тегами — название, параметр tag в href — его идентификатор. -->
-                        <a class="tag-custom tag-blue" href="{% url 'tag' tag_slug='electronics' %}">электроника</a>
+                        {% for tag in popular_tags %}
+                            <a class="tag-custom tag-{{ tag.color }}" href="{% url 'tag' tag_slug=tag.slug %}">{{ tag.name }}</a>
+                        {% empty %}
+                            <span class="text-muted">Тегов пока нет.</span>
+                        {% endfor %}
                     <!-- Конец контейнера, открытого выше. -->
                     </div>
                 <!-- Конец смыслового раздела. -->
@@ -114,51 +107,19 @@
                     <h2 class="sidebar-heading">Лучшие участники</h2>
                     <!-- Список участников; list-unstyled убирает маркеры, mb-0 — нижний отступ. -->
                     <ul class="list-unstyled members-list mb-0">
-                        <!-- Один элемент списка участников; имя можно заменить здесь. -->
-                        <li class="member-row">
-                            <!-- Место участника в рейтинге; число можно изменить здесь. -->
-                            <span class="member-rank" aria-label="Место 1">1</span>
-                            <!-- Аватар: src задаёт файл, размер и скругление находятся в .member-avatar. -->
-                            <img class="member-avatar" src="{% static 'img/ivan.svg' %}" alt="Аватар: Иван">
-                            <!-- Имя занимает свободное место между аватаром и счётчиком. -->
-                            <span class="member-name">Иван <span class="member-fire" role="img" aria-label="Лидер рейтинга">🔥</span></span>
-                            <!-- Число ответов — пример; его можно изменить вручную. -->
-                            <span class="member-answers">
-                                <strong>128</strong>
-                                <span>ответов</span>
-                            </span>
-                        <!-- Конец элемента списка. -->
-                        </li>
-                        <!-- Один элемент списка участников; имя можно заменить здесь. -->
-                        <li class="member-row">
-                            <!-- Место участника в рейтинге; число можно изменить здесь. -->
-                            <span class="member-rank" aria-label="Место 2">2</span>
-                            <!-- Аватар: src задаёт файл, размер и скругление находятся в .member-avatar. -->
-                            <img class="member-avatar" src="{% static 'img/maria.svg' %}" alt="Аватар: Мария">
-                            <!-- Имя занимает свободное место между аватаром и счётчиком. -->
-                            <span class="member-name">Мария</span>
-                            <!-- Число ответов — пример; его можно изменить вручную. -->
-                            <span class="member-answers">
-                                <strong>96</strong>
-                                <span>ответов</span>
-                            </span>
-                        <!-- Конец элемента списка. -->
-                        </li>
-                        <!-- Один элемент списка участников; имя можно заменить здесь. -->
-                        <li class="member-row">
-                            <!-- Место участника в рейтинге; число можно изменить здесь. -->
-                            <span class="member-rank" aria-label="Место 3">3</span>
-                            <!-- Аватар: src задаёт файл, размер и скругление находятся в .member-avatar. -->
-                            <img class="member-avatar" src="{% static 'img/avatar.svg' %}" alt="Аватар: Артём">
-                            <!-- Имя занимает свободное место между аватаром и счётчиком. -->
-                            <span class="member-name">Артём</span>
-                            <!-- Число ответов — пример; его можно изменить вручную. -->
-                            <span class="member-answers">
-                                <strong>64</strong>
-                                <span>ответов</span>
-                            </span>
-                        <!-- Конец элемента списка. -->
-                        </li>
+                        {% for member in best_members %}
+                            <li class="member-row">
+                                <span class="member-rank">{{ forloop.counter }}</span>
+                                {% include 'partials/avatar.html' with person=member css_class='member-avatar' only %}
+                                <span class="member-name">
+                                    {% firstof member.get_full_name member.username %}
+                                    {% if forloop.first %}<span class="member-fire" role="img" aria-label="Лидер рейтинга">🔥</span>{% endif %}
+                                </span>
+                                <span class="member-answers"><strong>{{ member.answer_count }}</strong> ответов</span>
+                            </li>
+                        {% empty %}
+                            <li class="text-muted">Участников с ответами пока нет.</li>
+                        {% endfor %}
                     <!-- Конец списка. -->
                     </ul>
                 <!-- Конец смыслового раздела. -->

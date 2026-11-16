@@ -1,12 +1,12 @@
 {% load static %}
 {# Ответ текущей страницы. #}
-<article class="card card-custom answer-item{% if answer.correct %} answer-accepted{% endif %} mb-4">
+<article class="card card-custom answer-item{% if answer.is_correct %} answer-accepted{% endif %} mb-4">
         <!-- Внутренний контейнер карточки; Flexbox располагает аватар и текст рядом. -->
         <div class="card-body question-body">
             <!-- Левая колонка: аватар сверху, голосование под ним. -->
             <div class="question-author">
                 <!-- alt описывает картинку; имя файла можно заменить своим. -->
-                <img class="avatar-md" src="{% static answer.avatar %}" alt="Аватар: {{ answer.author }}">
+                {% include 'partials/avatar.html' with person=answer.author css_class='avatar-md' only %}
 
                 <!-- Стрелки меняют цвет при наведении, число рейтинга пока статическое. -->
                 <div class="like-box" role="group" aria-label="Голосование за ответ 1">
@@ -25,7 +25,7 @@
                 <!-- Заголовок обозначает автора ответа; дата имеет машинный формат datetime. -->
                 <h3 class="answer-name">{{ answer.author }}</h3>
                 <p class="question-date answer-date">
-                    <time datetime="2026-10-15T12:00">15 октября 2026, 12:00</time>
+                    <time datetime="{{ answer.created_at|date:'c' }}">{{ answer.created_at|date:"j E Y, H:i" }}</time>
                 <!-- Конец абзаца. -->
                 </p>
 
@@ -34,8 +34,8 @@
 
                 <!-- Два состояния отметки: выбранная и нейтральная.
                 Переключение и права автора добавляются вместе с серверной логикой. -->
-                <button class="answer-mark{% if answer.correct %} is-correct{% endif %}" type="button" aria-pressed="{{ answer.correct|yesno:'true,false' }}">
-                    {% if answer.correct %}✓ Правильный ответ{% else %}Отметить как правильный{% endif %}
+                <button class="answer-mark{% if answer.is_correct %} is-correct{% endif %}" type="button" aria-pressed="{{ answer.is_correct|yesno:'true,false' }}">
+                    {% if answer.is_correct %}✓ Правильный ответ{% else %}Отметить как правильный{% endif %}
                 </button>
             <!-- Конец контейнера, открытого выше. -->
             </div>

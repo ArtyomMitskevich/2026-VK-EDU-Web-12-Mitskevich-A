@@ -2,7 +2,7 @@
 {% for question in questions %}
     {% include 'questions/partials/question_card.html' with question=question %}
 {% empty %}
-    <p class="text-muted">Вопросов по этой теме пока нет.</p>
+    <p class="text-muted">{% if tag_name %}Вопросов по этому тегу пока нет.{% else %}Пока нет ни одного вопроса.{% endif %}</p>
     <a class="btn btn-primary mb-4" href="{% url 'ask' %}">Задать вопрос</a>
 {% endfor %}
 {% include 'questions/partials/pagination.html' %}

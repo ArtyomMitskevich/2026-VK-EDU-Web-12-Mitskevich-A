@@ -1,17 +1,37 @@
 services:
   web:
     build: .
-    ports:
-      - "8000:8000"
+    env_file: .env.docker
     environment:
-      DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY:-local-development-key-not-for-production}
-      DJANGO_DEBUG: ${DJANGO_DEBUG:-1}
-      DJANGO_ALLOWED_HOSTS: ${DJANGO_ALLOWED_HOSTS:-localhost,127.0.0.1,[::1]}
+      DJANGO_IN_DOCKER: "1"
+    ports:
+      - "127.0.0.1:8000:8000"
     volumes:
-      # Изменения в PyCharm сразу видны серверу внутри контейнера.
       - .:/app
-      # Пользовательские файлы сохраняются отдельно от образа.
       - media_data:/app/media
+    depends_on:
+      db:
+        condition: service_healthy
+    command: sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import socket; socket.create_connection(('127.0.0.1', 8000), 2).close()"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+
+  db:
+    image: postgres:17
+    env_file: .env.docker
+    ports:
+      - "127.0.0.1:55432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -U \"$$POSTGRES_USER\" -d \"$$POSTGRES_DB\""]
+      interval: 3s
+      timeout: 3s
+      retries: 20
 
 volumes:
   media_data:
+  postgres_data:

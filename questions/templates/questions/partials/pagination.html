@@ -10,10 +10,12 @@
                 <span class="page-link" aria-disabled="true">Назад</span>
             {% endif %}
         </li>
-        {% for number in page_obj.paginator.page_range %}
-            <li class="page-item{% if number == page_obj.number %} active{% endif %}">
+        {% for number in page_obj.visible_numbers %}
+            <li class="page-item{% if number == page_obj.number %} active{% elif number == page_obj.paginator.ELLIPSIS %} disabled{% endif %}">
                 {% if number == page_obj.number %}
                     <span class="page-link" aria-current="page">{{ number }}</span>
+                {% elif number == page_obj.paginator.ELLIPSIS %}
+                    <span class="page-link">{{ number }}</span>
                 {% else %}
                     <a class="page-link" href="?page={{ number }}{{ anchor|default:'' }}">{{ number }}</a>
                 {% endif %}

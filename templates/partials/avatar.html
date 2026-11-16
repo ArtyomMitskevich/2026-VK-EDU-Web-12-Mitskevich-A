@@ -1,0 +1,5 @@
+{% load static %}
+{# Профиль и аватар могут отсутствовать у пользователя. #}
+<img class="{{ css_class }}"
+     src="{% if person.profile.avatar %}{{ person.profile.avatar.url }}{% else %}{% static 'questions/img/avatar.svg' %}{% endif %}"
+     alt="Аватар: {{ person }}">

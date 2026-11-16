@@ -4,7 +4,7 @@
     <!-- Flexbox размещает аватар с оценкой слева, содержимое — справа. -->
     <div class="card-body question-body">
         <div class="question-author">
-            <img class="avatar-md" src="{% static question.avatar %}" alt="Аватар: {{ question.author }}">
+            {% include 'partials/avatar.html' with person=question.author css_class='avatar-md' only %}
             <div class="like-box" role="group" aria-label="Голосование за вопрос {{ question.id }}">
                 <button class="like-btn vote-up" type="button" aria-label="Нравится">▲</button>
                 <span class="score">{{ question.rating }}</span>
@@ -14,12 +14,12 @@
         <div class="question-content">
             {% include 'questions/partials/question_content.html' with obj=question %}
             <div class="question-meta">
-                <a class="answer-link" href="{% url 'question' question_id=question.id %}#answers">Ответы ({{ question.answer_count }})</a>
-                {% include 'questions/partials/tags.html' with tags=question.tags %}
+                <a class="answer-link" href="{{ question.get_absolute_url }}#answers">Ответы ({{ question.answer_count }})</a>
+                {% include 'questions/partials/tags.html' with tags=question.tags.all %}
             </div>
             <!-- Имя автора и дата публикации. -->
             <p class="question-date">
-                {{ question.author }} · <time datetime="2026-10-15T10:30">15 октября 2026, 10:30</time>
+                {{ question.author }} · <time datetime="{{ question.created_at|date:'c' }}">{{ question.created_at|date:"j E Y, H:i" }}</time>
             </p>
         </div>
     </div>

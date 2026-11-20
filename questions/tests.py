@@ -25,9 +25,17 @@ class PageTests(TestCase):
         QuestionLike.objects.create(question=cls.question, user=cls.author, value=1)
 
     def test_routes(self):
-        for name in ("index", "hot", "ask", "login", "signup", "profile"):
+        for name in ("index", "hot", "login", "signup"):
             with self.subTest(name=name):
                 self.assertEqual(self.client.get(reverse(name)).status_code, 200)
+
+    def test_private_routes(self):
+        for name in ("ask", "profile"):
+            url = reverse(name)
+            self.assertRedirects(self.client.get(url), f"/login/?next={url}")
+        self.client.force_login(self.author)
+        for name in ("ask", "profile"):
+            self.assertEqual(self.client.get(reverse(name)).status_code, 200)
 
     def test_question_ranking_and_independent_answer_count(self):
         newest = Question.objects.create(author=self.author, title="Новый", text="Текст")

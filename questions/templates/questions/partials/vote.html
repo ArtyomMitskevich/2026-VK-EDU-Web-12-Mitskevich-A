@@ -1,0 +1,7 @@
+<div class="like-box" data-vote-url="{% url route obj.pk %}" role="group" aria-label="Голосование">
+    <button class="like-btn vote-up" type="button" data-value="1" aria-label="Нравится"
+            {% if not user.is_authenticated %}disabled title="Войдите, чтобы голосовать"{% elif obj.user_vote == 1 %}disabled title="Вы уже поставили лайк"{% endif %}>▲</button>
+    <span class="score" aria-live="polite">{{ obj.rating }}</span>
+    <button class="like-btn vote-down" type="button" data-value="-1" aria-label="Не нравится"
+            {% if not user.is_authenticated %}disabled title="Войдите, чтобы голосовать"{% elif obj.user_vote == -1 %}disabled title="Вы уже поставили дизлайк"{% endif %}>▼</button>
+</div>

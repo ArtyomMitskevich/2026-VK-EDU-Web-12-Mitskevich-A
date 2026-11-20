@@ -1955,3 +1955,14 @@ body.home-page {
         margin-left: 0;
     }
 }
+
+/* Поля Django используют те же цвета и отступы, что и остальная форма. */
+.site-form input:not([type=hidden]), .site-form textarea {
+    display: block;
+    width: 100%;
+    padding: .6rem .75rem;
+    border: 1px solid #ced4da;
+    border-radius: .375rem;
+}
+.site-form .errorlist { color: #a72232; }
+.like-btn:disabled { opacity: .55; cursor: default; }

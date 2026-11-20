@@ -1,6 +1,6 @@
 {% load static %}
 {# Ответ текущей страницы. #}
-<article class="card card-custom answer-item{% if answer.is_correct %} answer-accepted{% endif %} mb-4">
+<article id="answer-{{ answer.pk }}" class="card card-custom answer-item{% if answer.is_correct %} answer-accepted{% endif %} mb-4">
         <!-- Внутренний контейнер карточки; Flexbox располагает аватар и текст рядом. -->
         <div class="card-body question-body">
             <!-- Левая колонка: аватар сверху, голосование под ним. -->
@@ -8,15 +8,7 @@
                 <!-- alt описывает картинку; имя файла можно заменить своим. -->
                 {% include 'partials/avatar.html' with person=answer.author css_class='avatar-md' only %}
 
-                <!-- Стрелки меняют цвет при наведении, число рейтинга пока статическое. -->
-                <div class="like-box" role="group" aria-label="Голосование за ответ 1">
-                    <!-- Положительная оценка: зелёный цвет задаётся через :hover в CSS. -->
-                    <button class="like-btn vote-up" type="button" aria-label="Нравится">▲</button>
-                    <span class="score">{{ answer.rating }}</span>
-                    <!-- Отрицательная оценка: красный цвет задаётся через :hover в CSS. -->
-                    <button class="like-btn vote-down" type="button" aria-label="Не нравится">▼</button>
-                <!-- Конец контейнера, открытого выше. -->
-                </div>
+                {% include 'questions/partials/vote.html' with obj=answer route='answer_vote' %}
             <!-- Конец контейнера, открытого выше. -->
             </div>
 
@@ -32,11 +24,15 @@
                 <!-- Текст ответа разделён на абзацы для удобства чтения. -->
                 <div class="question-description">{{ answer.text|linebreaks }}</div>
 
-                <!-- Два состояния отметки: выбранная и нейтральная.
-                Переключение и права автора добавляются вместе с серверной логикой. -->
-                <button class="answer-mark{% if answer.is_correct %} is-correct{% endif %}" type="button" aria-pressed="{{ answer.is_correct|yesno:'true,false' }}">
-                    {% if answer.is_correct %}✓ Правильный ответ{% else %}Отметить как правильный{% endif %}
-                </button>
+                {% if user.pk == question.author_id %}
+                    <button class="answer-mark{% if answer.is_correct %} is-correct{% endif %}"
+                            data-correct-url="{% url 'correct_answer' question.pk %}" data-answer="{{ answer.pk }}"
+                            type="button" aria-pressed="{{ answer.is_correct|yesno:'true,false' }}">
+                        {% if answer.is_correct %}✓ Правильный ответ{% else %}Отметить как правильный{% endif %}
+                    </button>
+                {% elif answer.is_correct %}
+                    <span class="answer-mark is-correct">✓ Правильный ответ</span>
+                {% endif %}
             <!-- Конец контейнера, открытого выше. -->
             </div>
         <!-- Конец контейнера, открытого выше. -->

@@ -28,16 +28,7 @@
                 <!-- alt описывает картинку; имя файла можно заменить своим. -->
                 {% include 'partials/avatar.html' with person=question.author css_class='avatar-md' only %}
 
-                <!-- Блок оценки: стрелки меняют цвет при наведении, нажатие пока не обрабатывается. -->
-                <div class="like-box" role="group" aria-label="Голосование за вопрос 1">
-                    <!-- Положительная оценка: зелёный цвет задаётся через :hover в CSS. -->
-                    <button class="like-btn vote-up" type="button" aria-label="Нравится">▲</button>
-                    <!-- Текущий рейтинг вопроса; число редактируется вручную. -->
-                    <span class="score">{{ question.rating }}</span>
-                    <!-- Отрицательная оценка: красный цвет задаётся через :hover в CSS. -->
-                    <button class="like-btn vote-down" type="button" aria-label="Не нравится">▼</button>
-                <!-- Конец контейнера, открытого выше. -->
-                </div>
+                {% include 'questions/partials/vote.html' with obj=question route='question_vote' %}
             <!-- Конец контейнера, открытого выше. -->
             </div>
 
@@ -86,23 +77,17 @@
 <!-- Конец смыслового раздела. -->
 </section>
 
-<!-- Форма ответа: сейчас показываем поля и встроенную проверку браузера. -->
 <section class="answer-compose" aria-labelledby="compose-title">
     <h2 class="h4 fw-bold" id="compose-title">Твой ответ</h2>
-    <p class="text-muted">Объясни решение и приведи расчёт или пример, если он поможет.</p>
-
-    <!-- Без серверной обработки ответ не сохраняется.
-    Кнопка type="button" пока не отправляет текст в адрес страницы. -->
-    <form>
-        <!-- for связывает подпись с id поля ввода. -->
-        <label class="form-label fw-semibold" for="answer-text">Текст ответа</label>
-        <!-- rows — высота; minlength и maxlength — допустимая длина текста. -->
-        <textarea class="form-control" id="answer-text" name="answer" rows="6" minlength="10" maxlength="2000" required aria-describedby="answer-help" placeholder="Поделись своим решением…"></textarea>
-        <!-- Подсказка связана с полем через aria-describedby. -->
-        <p class="form-text" id="answer-help">От 10 до 2000 символов. Пока это макет: ответ не отправляется и не сохраняется.</p>
-        <button class="btn btn-primary mt-2" type="button">Отправить ответ</button>
-    <!-- Конец формы поиска; кнопка создания вопроса находится вне неё. -->
+    <form method="post" class="site-form">
+        {% csrf_token %}
+        <fieldset {% if not user.is_authenticated %}disabled title="Войдите, чтобы ответить"{% endif %}>
+            {% include 'partials/form_fields.html' %}
+            <button class="btn btn-primary" type="submit">Отправить ответ</button>
+        </fieldset>
+        {% if not user.is_authenticated %}
+            <a href="{% url 'login' %}?next={{ request.get_full_path|urlencode }}">Войдите, чтобы ответить</a>
+        {% endif %}
     </form>
-<!-- Конец смыслового раздела. -->
 </section>
 {% endblock %}

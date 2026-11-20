@@ -30,8 +30,12 @@ class ProfileForm(forms.ModelForm):
         fields = ("username", "email")
         labels = {"username": "Ник"}
 
-    avatar = forms.ImageField(label="Аватар", required=False,
-                              help_text="JPEG, PNG или WebP до 5 МБ.")
+    avatar = forms.ImageField(
+        label="Аватар",
+        required=False,
+        help_text="JPEG, PNG или WebP до 5 МБ.",
+        error_messages={"invalid_extension": "Выберите файл JPEG, PNG или WebP."},
+    )
 
     def clean_avatar(self):
         image = self.cleaned_data.get("avatar")

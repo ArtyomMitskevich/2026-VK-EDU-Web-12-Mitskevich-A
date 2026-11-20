@@ -1,6 +1,7 @@
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
+from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.utils.http import url_has_allowed_host_and_scheme
@@ -10,7 +11,7 @@ from .forms import ProfileForm, RegisterForm
 
 
 def next_url(request):
-    target = request.POST.get("next", request.GET.get("next", ""))
+    target = request.POST.get("next", request.GET.get("next", "")).strip()
     if url_has_allowed_host_and_scheme(target, {request.get_host()}, require_https=request.is_secure()):
         return target
     return reverse("index")
@@ -21,7 +22,7 @@ def login(request):
     target = next_url(request)
     if request.method == "POST" and form.is_valid():
         auth.login(request, form.get_user())
-        return redirect(target)
+        return HttpResponseRedirect(target)
     return render(request, "core/login.html", {"form": form, "next": target})
 
 
@@ -35,11 +36,13 @@ def signup(request):
 
 @login_required
 def profile(request):
-    form = ProfileForm(request.POST if request.method == "POST" else None,
-                       request.FILES, instance=request.user)
-    if request.method == "POST" and form.is_valid():
-        form.save()
-        return redirect("profile")
+    if request.method == "POST":
+        form = ProfileForm(request.POST, request.FILES, instance=request.user)
+        if form.is_valid():
+            form.save()
+            return redirect("profile")
+    else:
+        form = ProfileForm(instance=request.user)
     return render(request, "core/profile.html", {"form": form})
 
 
@@ -47,4 +50,4 @@ def profile(request):
 def logout(request):
     target = next_url(request)
     auth.logout(request)
-    return redirect(target)
+    return HttpResponseRedirect(target)
